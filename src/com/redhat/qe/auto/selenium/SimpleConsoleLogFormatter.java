@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
-import com.redhat.qe.auto.testng.LogMessageUtil;
+import com.redhat.qe.jul.TestRecords;
 
 /**
  * A Formatter for java logging, to print nice timestamped 
@@ -29,7 +29,7 @@ public class SimpleConsoleLogFormatter extends Formatter {
 		if (record.getThrown() != null) throwable = throwableToString(record.getThrown())  + "\n";
 		if (record.getParameters() != null)
 			for (Object param: record.getParameters()){
-				if (param.equals(LogMessageUtil.Style.Banner))
+				if (param.equals(TestRecords.Style.Banner))
 					message = "======= " + message;
 			}
 		

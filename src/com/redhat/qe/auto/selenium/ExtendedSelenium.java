@@ -68,8 +68,6 @@ public class ExtendedSelenium extends DefaultSelenium implements ITestNGScreenCa
 		log.finer("Start selenium.");
 		super.start();
 
-		// TODO this is ugly
-		TestNGListener.setScreenCaptureUtility(this);
 		windowFocus();
 		windowMaximize();
 		String delay = System.getProperty("selenium.delay");
