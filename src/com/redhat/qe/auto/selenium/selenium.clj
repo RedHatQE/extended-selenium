@@ -79,7 +79,8 @@ will be looked up and converted to String locators (see locator-args)"
         filtered (filter #(not= nil (second %)) ordered-items )]
     (when (-> filtered count (> 0))
       (doseq [[el val] ordered-items]
-        (fill-item el val))
+        (when val
+          (fill-item el val)))
       (browser click submit)
       ((or post-fn load-wait)))
     filtered))
