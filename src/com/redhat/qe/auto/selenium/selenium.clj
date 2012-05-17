@@ -50,23 +50,35 @@ will be looked up and converted to String locators (see locator-args)"
 (defn load-wait []
   (browser waitForPageToLoad "60000"))
 
-(defn fill-item [el val]
-  (let [eltype (browser getElementType el)]
-    (cond (= eltype "selectlist") (browser select el val)
-          (= eltype "checkbox") (browser checkUncheck el (boolean val))
-          :else (browser setText el val))))
+(defn fill-item
+  "If el is a function, assume vals are args, and call el with args. Otherwise,
+   el is an element, and it's filled in with val depending on what
+   type it is."
+  [el val]
+  (if (fn? el)
+    (apply el val)
+    (let [eltype (browser getElementType el)]
+      (cond (= eltype "selectlist") (browser select el val)
+            (= eltype "checkbox") (browser checkUncheck el (boolean val))
+            :else (browser setText el val)))))
 
 (defn fill-form
-  "Fills in a standard HTML form.  items-map is a mapping of locators
-   of form elements, to the string values that should be selected or
-   entered.  'submit' is a locator for the submit button to click at
-   the end.  Optional no-arg fn argument post-fn will be called after the
-   submit click."
-  [items-map submit & [post-fn]]
-  (let [filtered (select-keys items-map
-                              (for [[k v] items-map :when (not (nil? v))] k))]
+  "Fills in a standard HTML form. items is a mapping of locators of
+   form elements, to the string values that should be selected or
+   entered. You can also map function names to arglists, to perform
+   other tasks while filling in the form. If you care about the order
+   the items are filled in, use a list instead of a map. 'submit' is a
+   locator for the submit button to click at the end. Optional no-arg
+   fn argument post-fn will be called after the submit click.
+   Example:
+    (fill-form [:user 'joe' :password 'blow' choose-type ['manager']] :submit)"
+  [items submit & [post-fn]]
+  (let [ordered-items (if (sequential? items)
+                        (partition 2 items)
+                        (into [] items))
+        filtered (filter #(not= nil (second %)) ordered-items )]
     (when (-> filtered count (> 0))
-      (doseq [[el val] filtered]
+      (doseq [[el val] ordered-items]
         (fill-item el val))
       (browser click submit)
       ((or post-fn load-wait)))
