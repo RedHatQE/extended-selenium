@@ -69,7 +69,6 @@ public class ExtendedSelenium extends DefaultSelenium implements ITestNGScreenCa
 		super.start();
 
 		windowFocus();
-		windowMaximize();
 		String delay = System.getProperty("selenium.delay");
 		if (delay != null)  {
 			try {
