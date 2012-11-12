@@ -85,12 +85,19 @@ will be looked up and converted to String locators (see locator-args)"
       ((or post-fn load-wait)))
     filtered))
 
-(defmacro loop-with-timeout [timeout bindings & forms]
+(defmacro loop-with-timeout
+  "Similar to clojure.core/loop, but adds a timeout to break out of
+  the loop if it takes too long. timeout is in ms. bindings are the
+  bindings that would be provided to clojure.core/loop. body is the
+  loop body to execute if the timeout has not been reached. timeout-body
+  is the body to execute if the timeout has been reached. timeout-body
+  defaults to throwing a RuntimeException."
+  [timeout bindings body & [timeout-body]]
   `(let [starttime# (System/currentTimeMillis)]
      (loop ~bindings
        (if  (> (- (System/currentTimeMillis) starttime#) ~timeout)
-	 (throw (RuntimeException. (str "Hit timeout of " ~timeout "ms.")))
-	 (do ~@forms)))))
+         ~(or timeout-body `(throw (RuntimeException. (str "Hit timeout of " ~timeout "ms."))))
+         ~body))))
 
 (defn- first-appear [sel-fn timeout & elements]
   (loop-with-timeout timeout []

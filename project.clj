@@ -1,4 +1,4 @@
-(defproject com.redhat.qe/extended-selenium "1.0.3.2"
+(defproject com.redhat.qe/extended-selenium "1.1.0-SNAPSHOT"
   :description "An extension of the selenium RC client with extra logging and convenience methods"
   :java-source-path "src"
   :dependencies [[org.seleniumhq.selenium.client-drivers/selenium-java-client-driver "1.0.2"]
