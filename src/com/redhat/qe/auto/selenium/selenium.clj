@@ -85,6 +85,14 @@ will be looked up and converted to String locators (see locator-args)"
       ((or post-fn load-wait)))
     filtered))
 
+(defn fill-ajax-form
+  "Fills in a web form and clicks the submit button. Only waits for
+   ajax calls to complete. Items should be a map, where the keys are
+   locators for form elements, and values are the values to fill in.
+   Submit should be a locator for the form submit button."
+  [items submit]
+  (fill-form items submit (constantly nil)))
+
 (defmacro loop-with-timeout
   "Similar to clojure.core/loop, but adds a timeout to break out of
   the loop if it takes too long. timeout is in ms. bindings are the
