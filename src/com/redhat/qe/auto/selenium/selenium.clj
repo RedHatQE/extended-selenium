@@ -31,6 +31,11 @@ keywords."
                   (str "Locator " arg " not found in UI mapping."))))
       arg)))
 
+(def ^{:doc "A function to format locators out of a template. Example:
+              ((template \"//div[.='%s']\") \"foo\") =>
+                \"//div[.='foo']\""}
+  template (partial partial format))
+
 (defn call-sel [action & args]
   (clojure.lang.Reflector/invokeInstanceMethod
     sel action (into-array Object (apply locator-args args))))
