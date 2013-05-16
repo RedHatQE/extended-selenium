@@ -1,0 +1,7 @@
+lib
+classes
+.project
+.classpath
+.lein-deps-sum
+.lein-plugins/
+
